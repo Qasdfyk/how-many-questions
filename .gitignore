@@ -1,0 +1,8 @@
+data/
+outputs/cache/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+~$*
+*.pptx~
