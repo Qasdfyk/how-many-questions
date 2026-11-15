@@ -120,3 +120,36 @@ Każda faza ma swoje produkty i jawne kryterium zakończenia. Kolejna faza zaczy
 - **Za mało GPU** → model 3B lub 4-bit, mniejsza siatka szumu, podzbiór testu.
 - **Model szumu z literatury nie odpowiada rzeczywistości** → analiza wrażliwości na siatce σ i p (wnioski jako funkcja szumu), opcjonalnie mini-pilot E6.
 - **S4 nie bije S2** → to też wynik: „statyczna kolejność wystarcza”, co upraszcza aplikację. Raportujemy uczciwie.
+
+## Zmiany po F2 (15.11)
+
+- **Model główny: Qwen2.5-VL-7B-Instruct-AWQ** zamiast 7B bf16 — mamy GPU 8 GB (RTX 3070 Laptop, WSL).
+  Wagi AWQ zajmują 6,7 GiB, więc 3 GB wag trzymamy w RAM (`--cpu-offload-gb 3`, bez CUDA graphs).
+  Kosztem jest przepustowość (~1 s/wywołanie przy współbieżności 8). Na większym GPU ten sam kod
+  działa z innym configiem.
+- **Qwen2.5-VL-3B-AWQ odrzucony** już w demo na 10 daniach: kotwiczy się na stałych wartościach
+  (35/350 kcal), a z pełną informacją jest gorszy niż bez niej (MAPE 60% → 82%).
+- **Deduplikacja promptów** zamiast ręcznej redukcji siatki: identyczne prompty liczymy raz.
+  Pełny protokół (300 walidacja + 492 test, 8 wariantów szumu) to ~116 tys. unikalnych wywołań.
+- **Q2 pod szumem U1:** kategoria porcji wynika z tej samej zaburzonej percepcji masy co Q1
+  (spójny użytkownik). Bez tego H3 byłaby sprawdzana na korzyść Q2 z góry.
+- **Kalibracja U1:** σ = 0,33 daje analitycznie 56% odpowiedzi w ±25% (dokładnie 50% wymagałoby σ ≈ 0,375).
+- **Q2** pokazuje użytkownikowi przedziały masy (tercyle z walidacji: < 153 g, 153–288 g, > 288 g).
+
+## Decyzje po pilocie F3 (15.11)
+
+Pilot: 7B-AWQ, 50 dań walidacji. Bez CoT: 0% błędów parsowania, MAPE S0 85%, pełna informacja 51%,
+~1,2 s/wywołanie. Z CoT: MAPE 89% / 68%, ~2,8 s/wywołanie. Po odrzuceniu dań < 50 kcal:
+S0 39%, pełna informacja 43% (mediana APE 35% w obu przypadkach).
+
+- **Bez CoT** — z CoT wolniej i gorzej.
+- **Odrzucamy dania < 50 kcal** (`data.min_kcal: 50`). Przy kilku–kilkunastu kcal błąd procentowy
+  eksploduje (10 kcal vs 35 kcal = 250%) i jedno takie danie dominuje średnią. Zbiór: 300 walidacja, 424 test.
+- **„Pełna informacja nie pomaga” traktujemy jako wynik**, bez dostrajania promptu na siłę. Dlatego H1
+  mierzymy względem **oracle** przy tym samym budżecie (`share_of_oracle`), a odzyskany zysk względem
+  wszystkich 7 pytań raportujemy pomocniczo.
+- **H4:** 82% dań ma > 10% kcal z tłuszczu, więc próg 10% nic nie dzieli. **Przyjmujemy próg 30%.**
+- **σ = 0,33 zostaje** (jak w planie i prezentacji). Siatka σ ∈ {0,1; 0,33; 0,5} i tak pokazuje,
+  jak wnioski zależą od szumu, a 0,375 (dokładne 50% w ±25%) leży wewnątrz tej siatki.
+- **Budżet obliczeń do 48 h** jest akceptowalny.
+- **Drugi VLM (E5)** — później, jeśli będzie dostęp do większego GPU.

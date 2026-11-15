@@ -1,0 +1,72 @@
+# Central configuration. Everything is seeded and driven from here.
+seed: 42
+
+paths:
+  raw_dir: data/n5k                  # mirror of the public bucket (subset)
+  dishes: data/dishes.parquet         # GT + per-question true answers
+  cache_dir: outputs/cache            # VLM call cache (resumable, not in git)
+  out_dir: outputs                    # tables, figures
+
+data:
+  bucket: nutrition5k_dataset
+  prefix: nutrition5k_dataset
+  n_val: 300                          # validation dishes sampled from official train split
+  download_workers: 16
+  min_kcal: 50                        # decided after F3 pilot: <50 kcal plates dominate MAPE
+  min_mass_g: 10
+
+questions:
+  pool: [Q1, Q2, Q3, Q4, Q5, Q6, Q7]
+  max_budget: 3
+  q7_min_grams: 10                    # an ingredient counts as a separate item if >= this mass
+  q3_min_grams: 1                     # fat ingredient presence threshold
+  q4_min_grams: 1                     # sauce ingredient presence threshold
+
+# Simulated users. Answers are drawn once per (dish, variant, question) so the
+# same user gives the same answer regardless of which other questions are asked.
+noise:
+  main: U1_s033                       # main realistic variant (agent S3, headline figures)
+  variants:
+    U0:        {}
+    U1_s033:   {mass_sigma: 0.33}
+    U1_s050:   {mass_sigma: 0.50, max_budget: 2}
+    U1_s010:   {mass_sigma: 0.10, max_budget: 2}
+    U1_bias:   {mass_sigma: 0.33, mass_mu: 0.20, max_budget: 2}
+    U2_p010:   {cat_p: 0.10}
+    U2_p020:   {cat_p: 0.20, max_budget: 2}
+    U3_q020:   {dont_know_q: 0.20}
+
+vlm:
+  base_url: http://localhost:8000/v1
+  api_key: EMPTY
+  model: Qwen/Qwen2.5-VL-7B-Instruct-AWQ  # 3B-AWQ failed the F2 demo (anchoring, worse with facts)
+  max_pixels: 401408                  # 512 * 28 * 28; N5k overhead RGB is 640x480 (307200) anyway
+  temperature: 0.0
+  max_tokens: 256
+  cot: false                          # short reasoning field before the numbers
+  concurrency: 8
+  timeout_s: 180
+  max_retries: 6
+  kcal_range: [5, 4000]
+  mass_range: [5, 3000]
+
+uncertainty:
+  k: 5                                # S0 samples for variance
+  temperature: 0.7
+
+selector:                             # S4
+  n_estimators: 300
+  learning_rate: 0.05
+  num_leaves: 15
+  min_child_samples: 10
+  cv_folds: 5
+
+agent:                                # S3
+  budgets: [1, 2, 3]
+  noise: [U0, U1_s033]
+
+eval:
+  budgets: [0, 1, 2, 3]
+  n_random: 20                        # S1 random draws averaged
+  bootstrap: 2000
+  acc_tol: 0.20

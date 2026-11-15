@@ -24,3 +24,27 @@ Temat: wybór pytań do użytkownika sterowany niepewnością, przy budżecie 0�
 - Wszystko seedowane i sterowane configiem (`configs/*.yaml`).
 - `data/` i `outputs/cache/` nie trafiają do gita.
 - Commity: **nigdy** nie dodawać Claude jako współautora ani linijek „Generated with Claude Code”.
+- Repo jest **publiczne** na GitHubie — nic prywatnego (dane, klucze, maile) do gita.
+
+## Wykresy — standard projektu
+
+Każdy wykres (artykuł, slajdy, raporty) robimy przez `src/pbad/plotstyle.py` (`ps.apply()`, `ps.header()`,
+`ps.save()`), w stylu raportów badawczych: ciepłe złamane białe tło, bez ramki, tylko cienka linia bazowa
+i cienka pozioma siatka (ciągła, nigdy przerywana), cienkie linie 2 px, markery z obwódką w kolorze tła.
+- Tytuł do lewej + jednozdaniowy podtytuł z wnioskiem. Tekst zawsze w kolorach atramentu, nigdy w kolorze serii.
+- Max 3 kolorowe serie na panel (paleta zwalidowana pod daltonizm), reszta w szarości; kolor należy do bytu
+  (S4 zawsze niebieski, S2 pomarańczowy, S3 turkusowy, S1 szary, oracle szary przerywany).
+- Legenda przy ≥ 2 seriach, etykiety bezpośrednie oszczędnie (koniec linii, seria, o której jest historia).
+- Jedna oś Y; zamiast wielu serii — small multiples. Porównania przed/po — dumbbell.
+- `ps.save()` zapisuje PNG (slajdy) + PDF (artykuł) + CSV z danymi wykresu. Po wygenerowaniu obejrzeć PNG
+  (kolizje etykiet, ucięcia).
+
+## Stan i komendy (po sesji 15.11)
+
+- F2 zrobione: kod całego pipeline'u F2–F4 w `src/pbad/`, skrypty `scripts/01–06`, `pytest` (23 testy).
+  Szczegóły i komendy: `README.md`. Zmiany względem planu: sekcja „Zmiany po F2” w `docs/04`.
+- Model: **Qwen2.5-VL-7B-Instruct-AWQ** z `--cpu-offload-gb 3` (preset w `scripts/serve_vllm.sh`), ~1,2 s/wywołanie.
+  3B-AWQ odrzucony w demo. vLLM 0.33 wymaga `VLLM_USE_FLASHINFER_SAMPLER=0` (brak nvcc w WSL; ustawione w skrypcie).
+- Decyzje po pilocie F3 (min_kcal 50, bez CoT, H1 względem oracle, H4 próg 30%): `docs/04`, sekcja „Decyzje po pilocie F3”.
+- Zatrzymywanie serwera: `pkill -f "[v]llm serve"` (nawiasy, żeby pkill nie zabił własnej powłoki).
+- Cache VLM: `outputs/cache/vlm_<model>.jsonl` — nie kasować, wszystko jest z niego wznawiane.

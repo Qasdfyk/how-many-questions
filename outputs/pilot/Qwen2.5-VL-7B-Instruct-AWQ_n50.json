@@ -1,0 +1,21 @@
+{
+  "model": "Qwen/Qwen2.5-VL-7B-Instruct-AWQ",
+  "cot": false,
+  "n_dishes": 50,
+  "parse_fail_rate": 0.0,
+  "clamped_rate": 0.0,
+  "sample_parse_fail_rate": 0.0,
+  "MAPE_S0": 85.11130224785852,
+  "MAPE_full_U0": 50.8332743773691,
+  "full_info_gain_pp": 34.27802787048942,
+  "MAE_S0": 85.31644734000001,
+  "acc20_S0": 0.28,
+  "acc20_full": 0.28,
+  "mean_latency_s": 11.038826574880169,
+  "mean_tokens_out": 27.91,
+  "new_calls": 280,
+  "wall_s": 337.3772522220006,
+  "sec_per_call_throughput": 1.2049187579357163,
+  "full_precompute_unique_prompts": 115864,
+  "full_precompute_hours_est": 38.77964082485107
+}
