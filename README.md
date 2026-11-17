@@ -65,6 +65,14 @@ user × budget), `tests_test.csv` (Wilcoxon + bootstrap CI + Holm, H2), `questio
 `hypotheses_test.md` (automatic check of H1–H4), figures `fig*.png/.pdf` with their data as `.csv`.
 Pilot: `outputs/pilot/*.json`.
 
+## Paper (`paper/`)
+
+Springer `svjour3` template (two columns): `vision_z6.tex` (Z6 publication vision), `draft1.tex` (first draft
+discussion: protocol + pilot), `draft2.tex` (second draft discussion: complete paper). `references.bib` is a
+copy of `docs/references.bib` (keep them in sync); `figs/` holds PDF figures copied from `outputs/results/`.
+Extra CPU-only analyses and paper figures: `uv run python scripts/07_paper_extras.py`
+(→ `outputs/results/<model>/paper/`). Compile in Overleaf or with `latexmk -pdf draft2.tex` (pdflatex + bibtex).
+
 ## Code (`src/pbad/`)
 
 `data/` download and dish table · `questions.py` question pool Q1–Q7 · `simulator.py` users U0–U3 ·

@@ -8,7 +8,8 @@ Environment:
 - WSL Ubuntu, **RTX 3070 Laptop 8 GB** GPU, 15 GB RAM, Python 3.12 venv via `uv`, no `gsutil` (data over HTTP).
 - **8 GB VRAM ≠ Qwen2.5-VL-7B bf16** from the original plan. The model is chosen in the config; the pilot compared **Qwen2.5-VL-3B-Instruct-AWQ** and **Qwen2.5-VL-7B-Instruct-AWQ** in vLLM. Second VLM (E5): a model of another family, if a larger GPU becomes available. Same code, different config.
 
-Status: F2 done (15.11), F3 pilot done with decisions recorded in `docs/04`; F4 precompute pending.
+Status: F2–F4 done (17.11); results and H1–H4 verdicts in `docs/04`, "F4 results". No more GPU runs
+(E5 second VLM and E6 people study move to future work). Now: writing the paper (see "Paper stages").
 
 ## Repository structure
 
@@ -63,3 +64,18 @@ outputs/             results, tables, figures (cache not in git)
 - `pytest` green (simulator, mapping, parser, strategies on synthetic data with a known optimum).
 - Smoke: `scripts/03_pilot.py --n 10` produces predictions for all 10 dishes, S0 and full information, with a sensible MAPE.
 - Offline evaluation on a small cache (about 15 dishes) produces curves and tables without errors before the full precompute.
+
+## Paper stages (after F4)
+
+Guidelines: course slides "Projekt Badawczy – Z6" (IMRaD, title ≤ 15 words without acronyms, abstract by the
+Dunleavy scheme, Schaffer paragraphs, report negative results). Template: Springer `svjour3`, in `paper/`.
+Each stage gets its own short presentation (Polish).
+
+| Stage | Paper (`paper/manuscript.tex`) | Presentation |
+|---|---|---|
+| **Z6 — vision** ✓ | title candidates, draft abstract, every IMRaD section as bullet points, Results with real numbers, table and figures, missing material, schedule | vision: message, reader, title, structure, key results, open questions |
+| **Draft 1** (first discussion) ✓ `paper/draft1.tex` | stage after the F3 pilot: full prose Introduction, Related work, Methods, pilot results (50 dishes); Discussion as bullets; 6 questions for the discussion (pilot decisions) | protocol + pilot, decisions to take |
+| **Draft 2** (second discussion) ✓ `paper/draft2.tex` | complete paper with F4 results (424 test dishes), CPU-only extra analyses (`scripts/07_paper_extras.py`), Discussion, Conclusions, final abstract; 5 questions for the discussion | full results, verdicts H1–H4, recommendation, decisions before final |
+| **Final** (25.01) | revisions after draft 2, proofreading, references, repo cleanup | final talk |
+
+Exact dates of the two draft discussions: to confirm with the supervisor.

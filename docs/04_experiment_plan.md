@@ -134,7 +134,7 @@ Each phase has its products and an explicit completion criterion. The next phase
 
 Pilot: 7B-AWQ, 50 validation dishes. Without CoT: 0% parsing errors, S0 MAPE 85%, full information 51%,
 about 1.2 s per call. With CoT: MAPE 89% / 68%, about 2.8 s per call. After dropping dishes < 50 kcal:
-S0 39%, full information 43% (median APE 35% in both cases).
+S0 39%, full information 43% (median APE 33% in both cases).
 
 - **No CoT**: slower and worse with it.
 - **Dishes < 50 kcal are dropped** (`data.min_kcal: 50`). At a few kcal the percentage error
