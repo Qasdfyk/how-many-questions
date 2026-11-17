@@ -75,7 +75,7 @@ def run_precompute(df: pd.DataFrame, cfg: dict, split: str, variants=None, max_b
         uniq = {client.key(r) for *_, r in plan} | {client.key(r) for *_, r in samples}
         todo = sum(k not in client.cache for k in uniq)
         print(f"[{split}] {len(df)} dishes, {len(plan)} (variant,subset) cells + {len(samples)} samples "
-              f"-> {len(uniq)} unique prompts, {todo} not cached")
+              f"-> {len(uniq)} unique prompts, {todo} not cached", flush=True)
         if dry_run:
             return None
         dishes = list(df.dish_id)

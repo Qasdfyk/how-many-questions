@@ -121,7 +121,7 @@ def subgroups(rank: pd.DataFrame, out: Path, variant: str = "U0"):
         ax.set_xlabel("MAPE reduction vs photo only [pp]")
         ax.legend(handles=[Line2D([], [], marker="o", ls="", color=ps.SERIES[0], label=f"{la} (n={na})"),
                            Line2D([], [], marker="o", ls="", color=ps.SERIES[1], label=f"{lb} (n={nb})")],
-                  loc="lower right", fontsize=8)
+                  loc="upper left", bbox_to_anchor=(0, -0.32), ncol=2, fontsize=8)
     ps.header(fig, "Where each question helps", f"{ps.VARIANT_LABEL.get(variant, variant)}, one question asked.")
     fig.tight_layout(rect=(0, 0, 1, 1 - 0.75 / 3.6))
     ps.save(fig, out, p.reset_index())

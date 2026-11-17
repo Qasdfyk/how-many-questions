@@ -1,0 +1,48 @@
+{
+  "model": "Qwen/Qwen2.5-VL-7B-Instruct-AWQ",
+  "cot": false,
+  "eval_split": "test",
+  "n_fit": 300,
+  "n_eval": 424,
+  "parse_fail_rate_eval": 0.0,
+  "parse_fail_rate_fit": 0.0,
+  "s2_orders": {
+    "U0": [
+      "Q2",
+      "Q5",
+      "Q4"
+    ],
+    "U1_bias": [
+      "Q5",
+      "Q2"
+    ],
+    "U1_s010": [
+      "Q2",
+      "Q5"
+    ],
+    "U1_s033": [
+      "Q2",
+      "Q5",
+      "Q1"
+    ],
+    "U1_s050": [
+      "Q1",
+      "Q5"
+    ],
+    "U2_p010": [
+      "Q2",
+      "Q5",
+      "Q4"
+    ],
+    "U2_p020": [
+      "Q2",
+      "Q5"
+    ],
+    "U3_q020": [
+      "Q2",
+      "Q5",
+      "Q4"
+    ]
+  },
+  "agent_invalid_rate": 0.015723270440251572
+}
