@@ -8,3 +8,13 @@ __pycache__/
 *.pptx~
 outputs/*.log
 outputs/**/*.log
+
+# LaTeX build products
+paper/*.aux
+paper/*.log
+paper/*.blg
+paper/*.bbl
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.out
+paper/*.synctex.gz
